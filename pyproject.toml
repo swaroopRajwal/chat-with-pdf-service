@@ -4,4 +4,20 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "alembic>=1.19.1",
+    "asyncpg>=0.31.0",
+    "fastapi[standard]>=0.141.1",
+    "greenlet>=3.5.5",
+    "sqlalchemy>=2.0.52",
+]
+
+[dependency-groups]
+dev = [
+    "poethepoet>=0.48.0",
+]
+
+[tool.poe.tasks]
+db-generate = "alembic revision --autogenerate"
+db-migrate = "alembic upgrade head"
+dev = "fastapi dev app/main.py"
