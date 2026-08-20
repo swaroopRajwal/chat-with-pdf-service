@@ -5,6 +5,8 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     database_url: str
+    embedding_model: str
+    vector_dimensions: int
 
 
 settings = Settings()
