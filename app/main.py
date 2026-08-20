@@ -3,10 +3,13 @@ from fastapi.responses import JSONResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api import ingest
 from app.database.db import get_db
 from app.database.models.health import HealthTable
 
 app = FastAPI()
+
+app.include_router(ingest.router, prefix="/api/ingest", tags=["Ingest"])
 
 
 @app.get("/")

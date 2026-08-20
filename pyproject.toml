@@ -9,6 +9,10 @@ dependencies = [
     "asyncpg>=0.31.0",
     "fastapi[standard]>=0.141.1",
     "greenlet>=3.5.5",
+    "langchain-core>=1.5.6",
+    "langchain-text-splitters>=1.1.2",
+    "pymupdf>=1.28.2",
+    "pymupdf4llm>=1.28.2",
     "sqlalchemy>=2.0.52",
 ]
 
@@ -18,6 +22,6 @@ dev = [
 ]
 
 [tool.poe.tasks]
-db-generate = "alembic revision --autogenerate"
-db-migrate = "alembic upgrade head"
-dev = "fastapi dev app/main.py"
+db-generate = "uv run alembic revision --autogenerate"
+db-migrate = "uv run alembic upgrade head"
+dev = "uv run fastapi dev app/main.py"
