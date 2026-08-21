@@ -1,7 +1,9 @@
-from app.database.models.embeddings import EmbeddingsTable
-from app.database.models.health import HealthTable
+from .embeddings import EmbeddingsTable
+from .files import FilesTable
+from .health import HealthTable
 
 __all__ = [
     "EmbeddingsTable",
+    "FilesTable",
     "HealthTable",
 ]

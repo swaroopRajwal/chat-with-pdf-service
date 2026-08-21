@@ -13,8 +13,8 @@ class EmbeddingsTable(Base):
     __tablename__ = "embeddings"
 
     id: Mapped[str] = mapped_column(String, primary_key=True)
-    content: Mapped[str] = mapped_column(Text())
-    file_id: Mapped[str] = mapped_column(String)
+    content: Mapped[str] = mapped_column(Text(), nullable=False)
+    file_id: Mapped[str] = mapped_column(String, nullable=False)
     meta: Mapped[dict[str, Any]] = mapped_column(JSONB, name="metadata")
     embeddings: Mapped[list[float]] = mapped_column(
         Vector(dim=settings.vector_dimensions)

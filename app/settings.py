@@ -7,6 +7,8 @@ class Settings(BaseSettings):
     database_url: str
     embedding_model: str
     vector_dimensions: int
+    chunk_size: int
+    chunk_overlap: int
 
 
 settings = Settings()

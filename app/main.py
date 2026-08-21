@@ -1,4 +1,5 @@
-from fastapi import Depends, FastAPI, HTTPException, Request
+import fastapi_swagger_dark as docs_dark_theme
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -7,7 +8,12 @@ from app.api import ingest
 from app.database.db import get_db
 from app.database.models.health import HealthTable
 
-app = FastAPI()
+app = FastAPI(docs_url=None)
+
+# Swagger UI dark theme
+docs_dark_theme_router = APIRouter()
+docs_dark_theme.install(docs_dark_theme_router)
+app.include_router(docs_dark_theme_router)
 
 app.include_router(ingest.router, prefix="/api/ingest", tags=["Ingest"])
 
