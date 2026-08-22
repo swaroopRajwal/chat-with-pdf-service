@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api import ingest
+from app.api import ask, ingest
 from app.database.db import get_db
 from app.database.models.health import HealthTable
 
@@ -16,6 +16,7 @@ docs_dark_theme.install(docs_dark_theme_router)
 app.include_router(docs_dark_theme_router)
 
 app.include_router(ingest.router, prefix="/api/ingest", tags=["Ingest"])
+app.include_router(ask.router, prefix="/api/ask", tags=["Ask"])
 
 
 @app.get("/")

@@ -9,6 +9,11 @@ class Settings(BaseSettings):
     vector_dimensions: int
     chunk_size: int
     chunk_overlap: int
+    llm_model: str
+    llm_api_base: str
+    llm_api_key: str
+    llm_temperature: int
+    llm_max_tokens: int
 
 
 settings = Settings()
