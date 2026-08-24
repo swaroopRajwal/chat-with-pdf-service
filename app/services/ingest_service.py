@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.models import EmbeddingsTable, FilesTable
-from app.schemas.api_response import ResponseSchema
+from app.schemas.api_response_schema import ResponseSchema
 from app.settings import settings
 from app.utils import get_id
 

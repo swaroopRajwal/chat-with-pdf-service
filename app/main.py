@@ -1,22 +1,32 @@
 import fastapi_swagger_dark as docs_dark_theme
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api import ask, ingest
+from app.api import ask_api, files_api, ingest_api
 from app.database.db import get_db
 from app.database.models.health import HealthTable
 
 app = FastAPI(docs_url=None)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Swagger UI dark theme
 docs_dark_theme_router = APIRouter()
 docs_dark_theme.install(docs_dark_theme_router)
 app.include_router(docs_dark_theme_router)
 
-app.include_router(ingest.router, prefix="/api/ingest", tags=["Ingest"])
-app.include_router(ask.router, prefix="/api/ask", tags=["Ask"])
+app.include_router(ingest_api.router, prefix="/api/ingest", tags=["Ingest"])
+app.include_router(ask_api.router, prefix="/api/ask", tags=["Ask"])
+app.include_router(files_api.router, prefix="/api/files", tags=["Files"])
 
 
 @app.get("/")

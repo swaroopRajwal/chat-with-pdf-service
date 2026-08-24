@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.db import get_db
-from app.schemas.api_response import ResponseSchema
-from app.schemas.ingest import IngestBaseSchema
-from app.services.ingest import ingest_service
+from app.schemas.api_response_schema import ResponseSchema
+from app.schemas.ingest_schema import IngestBaseSchema
+from app.services.ingest_service import ingest_service
 
 # /api/ingest
 router = APIRouter()
