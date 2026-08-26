@@ -1,6 +1,9 @@
+from typing import cast
+
 import litellm
 from fastapi import HTTPException, status
 from langchain_huggingface import HuggingFaceEmbeddings
+from litellm import ModelResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -33,7 +36,7 @@ class AskService:
             select(EmbeddingsTable.content)
             .where(EmbeddingsTable.file_id == file_id)
             .order_by(EmbeddingsTable.embeddings.cosine_distance(query_vector))
-            .limit(5)
+            .limit(10)
         )
 
         similar_docs = result.scalars().all()
@@ -46,8 +49,14 @@ class AskService:
             {
                 "role": "system",
                 "content": (
-                    "You are an assistant answering questions based on the provided context.\n\n"
-                    f"Context:\n f{context}"
+                    "You are a highly precise AI assistant. Your task is to answer the user's "
+                    "questions based ONLY on the provided document context.\n\n"
+                    "Follow these rules STRICTLY:\n"
+                    "1. NO PREAMBLE: Do not include any introductory phrases, conversational filler, or meta-commentary (e.g., do not say 'Here is the answer' or 'Based on the text').\n"
+                    "2. Start your answer immediately with the core facts.\n"
+                    "3. Keep the answer short, precise, and simple.\n"
+                    "4. If the answer is not contained in the context, output exactly: 'I cannot find the answer in the provided document.' Do not guess.\n\n"
+                    f"Context:\n{context}"
                 ),
             },
             {"role": "user", "content": query},
@@ -62,6 +71,7 @@ class AskService:
             max_tokens=settings.llm_max_tokens,
             messages=messages,
         )
+        response = cast(ModelResponse, response)
 
         return response.choices[0].message.content
 

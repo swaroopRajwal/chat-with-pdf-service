@@ -1,3 +1,5 @@
+from typing import cast
+
 import pymupdf
 import pymupdf4llm
 from fastapi import HTTPException, UploadFile, status
@@ -28,7 +30,7 @@ class IngestService:
 
         file_name = file.filename
 
-        if not file_name.endswith(".pdf"):
+        if not file_name or not file_name.endswith(".pdf"):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Please upload a PDF file",
@@ -45,16 +47,17 @@ class IngestService:
 
         return PDFResultType(
             file_name=file_name,
-            pdf_content=pdf_texts,
+            pdf_content=cast(list[dict], pdf_texts),
         )
 
     def _create_langchain_documents(
         self,
-        pdfs: PDFResultType.pdf_content,
-        file_name: PDFResultType.file_name,
+        data: PDFResultType,
         file_id: str,
     ) -> CreateLangDocsType:
 
+        pdfs = data.pdf_content
+        file_name = data.file_name
         lang_docs: list[Document] = []
 
         for page in pdfs:
@@ -115,8 +118,7 @@ class IngestService:
         file_id = get_id()
 
         langchain_documents = self._create_langchain_documents(
-            pdfs=processed_pdf.pdf_content,
-            file_name=processed_pdf.file_name,
+            data=processed_pdf,
             file_id=file_id,
         )
 
