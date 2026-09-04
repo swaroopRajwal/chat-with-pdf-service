@@ -12,7 +12,14 @@ router = APIRouter()
 
 @router.post("", response_model=ResponseSchema[AskResponseSchema])
 async def ask_question(data: AskRequestSchema, db: AsyncSession = Depends(get_db)):
-    return await ask_service.ask_question(
+    result = await ask_service.ask_question(
         data=data,
         db=db,
+    )
+    return ResponseSchema(
+        status=True,
+        data={
+            "query": data.query,
+            "answer": result,
+        },
     )

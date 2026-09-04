@@ -10,7 +10,6 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.models import EmbeddingsTable, FilesTable
-from app.schemas.api_response_schema import ResponseSchema
 from app.settings import settings
 from app.utils import get_id
 
@@ -137,10 +136,7 @@ class IngestService:
         db.add(file_entry)
         await db.commit()
 
-        return ResponseSchema(
-            status=True,
-            data=file_entry,
-        )
+        return file_entry
 
 
 ingest_service = IngestService()

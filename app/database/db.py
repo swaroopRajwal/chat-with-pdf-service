@@ -12,6 +12,6 @@ engine = create_async_engine(settings.database_url, connect_args={"ssl": True})
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
 
-async def get_db() -> AsyncSession:
+async def get_db():
     async with async_session_maker() as session:
         yield session

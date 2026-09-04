@@ -8,7 +8,6 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.models import EmbeddingsTable, FilesTable
-from app.schemas.api_response_schema import ResponseSchema
 from app.schemas.ask_schema import AskRequestSchema
 from app.settings import settings
 
@@ -86,13 +85,7 @@ class AskService:
 
         result = await self._ask_llm(query=data.query, context=formatted_context)
 
-        return ResponseSchema(
-            status=True,
-            data={
-                "query": data.query,
-                "answer": result,
-            },
-        )
+        return result or ""
 
 
 ask_service = AskService()

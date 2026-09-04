@@ -15,4 +15,9 @@ async def upload_pdf(
     file: UploadFile,
     db: AsyncSession = Depends(get_db),
 ):
-    return await ingest_service.upload_pdf(file=file, db=db)
+    result = await ingest_service.upload_pdf(file=file, db=db)
+
+    return ResponseSchema(
+        status=True,
+        data=result,
+    )
