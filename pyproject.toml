@@ -29,3 +29,8 @@ dev = ["poethepoet>=0.48.0"]
 db-generate = "uv run alembic revision --autogenerate"
 db-migrate = "uv run alembic upgrade head"
 dev = "uv run fastapi dev app/main.py"
+
+[tool.pyright]
+exclude = [".venv"]
+venvPath = "."
+venv = ".venv"
