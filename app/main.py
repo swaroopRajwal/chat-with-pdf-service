@@ -28,7 +28,7 @@ app.include_router(docs_dark_theme_router)
 app.include_router(ingest_api.router, prefix="/api/ingest", tags=["Ingest"])
 app.include_router(ask_api.router, prefix="/api/ask", tags=["Ask"])
 app.include_router(files_api.router, prefix="/api/files", tags=["Files"])
-app.include_router(chat_api.router, prefix="/api/chat/init", tags=["Chat"])
+app.include_router(chat_api.router, prefix="/api/chats", tags=["Chat"])
 app.mount("/chat", socket_app)
 
 

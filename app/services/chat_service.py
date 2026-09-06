@@ -102,5 +102,11 @@ class ChatService:
 
         return new_chat
 
+    async def get_all_chats(self, db: AsyncSession):
+        result = await db.execute(
+            select(ChatsTable).order_by(ChatsTable.created_at.desc())
+        )
+        return result.scalars().all()
+
 
 chat_service = ChatService()
