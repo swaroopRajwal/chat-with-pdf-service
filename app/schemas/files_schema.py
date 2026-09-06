@@ -8,3 +8,5 @@ class FilesBaseSchema(BaseModel):
     file_name: str = Field(min_length=1)
     pages_count: int
     created_at: datetime
+
+    model_config = {"from_attributes": True}

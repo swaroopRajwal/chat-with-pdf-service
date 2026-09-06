@@ -4,6 +4,7 @@ import socketio
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
 from app.constants import MESSAGES_ROLES
 from app.database.db import async_session_maker
@@ -104,9 +105,26 @@ class ChatService:
 
     async def get_all_chats(self, db: AsyncSession):
         result = await db.execute(
-            select(ChatsTable).order_by(ChatsTable.created_at.desc())
+            select(ChatsTable)
+            .options(joinedload(ChatsTable.file))
+            .order_by(ChatsTable.created_at.desc())
         )
         return result.scalars().all()
+
+    async def get_chat_by_id(self, chat_id: str, db: AsyncSession):
+        result = await db.execute(
+            select(ChatsTable)
+            .options(joinedload(ChatsTable.file))
+            .where(ChatsTable.id == chat_id)
+        )
+        chat = result.scalars().first()
+
+        if not chat:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Chat not found"
+            )
+
+        return chat
 
 
 chat_service = ChatService()
