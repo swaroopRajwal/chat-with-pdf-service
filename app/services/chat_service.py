@@ -1,8 +1,17 @@
 from typing import TypedDict
 
 import socketio
+from fastapi import HTTPException, status
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.constants import MESSAGES_ROLES
 from app.database.db import async_session_maker
+from app.database.models.chats import ChatsTable
+from app.database.models.files import FilesTable
+from app.database.models.message import MessagesTable
+from app.schemas.chat_schema import InitChatReqSchema
+from app.utils import get_id
 
 sio = socketio.AsyncServer(
     async_mode="asgi",
@@ -55,3 +64,43 @@ async def send_message(sid, data: MessageType):
         },
         to=sid,
     )
+
+
+class ChatService:
+    async def init_chat(self, data: InitChatReqSchema, db: AsyncSession):
+        result = await db.execute(
+            select(FilesTable).where(FilesTable.id == data.file_id)
+        )
+
+        file = result.scalars().first()
+
+        if not file:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="File not found"
+            )
+
+        new_chat = ChatsTable(
+            id=get_id(),
+            client_id="change_this_later",
+            file_id=file.id,
+            messages=[],
+            file=file,
+        )
+
+        new_message = MessagesTable(
+            id=get_id(),
+            chat_id=new_chat.id,
+            content=data.query,
+            role=MESSAGES_ROLES["user"],
+            order=1,
+            chat=new_chat,
+        )
+
+        db.add(new_chat)
+        db.add(new_message)
+        await db.commit()
+
+        return new_chat
+
+
+chat_service = ChatService()

@@ -131,6 +131,7 @@ class IngestService:
             id=file_id,
             file_name=processed_pdf.file_name,
             pages_count=len(processed_pdf.pdf_content),
+            chats=[],
         )
 
         db.add(file_entry)
