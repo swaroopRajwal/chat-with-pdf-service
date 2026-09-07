@@ -4,7 +4,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.db import get_db
 from app.schemas.api_response_schema import ResponseSchema
-from app.schemas.chat_schema import ChatsBaseSchema, ChatsWithFileSchema, InitChatReqSchema
+from app.schemas.chat_schema import (
+    ChatDetailSchema,
+    ChatsBaseSchema,
+    ChatsWithFileSchema,
+    InitChatReqSchema,
+)
 from app.services.chat_service import chat_service, sio
 
 socket_app = socketio.ASGIApp(socketio_server=sio, socketio_path="/chat/socket.io")
@@ -34,7 +39,7 @@ async def get_all_chats(db: AsyncSession = Depends(get_db)):
     )
 
 
-@router.get("/{chat_id}", response_model=ResponseSchema[ChatsWithFileSchema])
+@router.get("/{chat_id}", response_model=ResponseSchema[ChatDetailSchema])
 async def get_chat(chat_id: str, db: AsyncSession = Depends(get_db)):
     chat = await chat_service.get_chat_by_id(chat_id=chat_id, db=db)
 

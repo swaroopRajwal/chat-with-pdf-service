@@ -10,6 +10,16 @@ class InitChatReqSchema(BaseModel):
     file_id: str = Field(min_length=1)
 
 
+class MessagesBaseSchema(BaseModel):
+    id: str = Field(min_length=1)
+    chat_id: str = Field(min_length=1)
+    content: str = Field(min_length=1)
+    role: str = Field(min_length=1)
+    order: int
+
+    model_config = {"from_attributes": True}
+
+
 class ChatsBaseSchema(BaseModel):
     id: str = Field(min_length=1)
     client_id: str = Field(min_length=1)
@@ -21,5 +31,11 @@ class ChatsBaseSchema(BaseModel):
 
 class ChatsWithFileSchema(ChatsBaseSchema):
     file: FilesBaseSchema
+
+    model_config = {"from_attributes": True}
+
+
+class ChatDetailSchema(ChatsWithFileSchema):
+    messages: list[MessagesBaseSchema]
 
     model_config = {"from_attributes": True}

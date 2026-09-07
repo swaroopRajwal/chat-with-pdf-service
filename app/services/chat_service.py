@@ -114,7 +114,10 @@ class ChatService:
     async def get_chat_by_id(self, chat_id: str, db: AsyncSession):
         result = await db.execute(
             select(ChatsTable)
-            .options(joinedload(ChatsTable.file))
+            .options(
+                joinedload(ChatsTable.file),
+                joinedload(ChatsTable.messages),
+            )
             .where(ChatsTable.id == chat_id)
         )
         chat = result.scalars().first()
@@ -123,6 +126,8 @@ class ChatService:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Chat not found"
             )
+        # TODO: check how to do this in the database query itself
+        chat.messages.sort(key=lambda m: m.order)
 
         return chat
 
