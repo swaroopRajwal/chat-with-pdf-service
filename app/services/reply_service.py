@@ -14,7 +14,7 @@ from app.settings import settings
 logger = logging.getLogger(__name__)
 
 CHAT_SYSTEM_PROMPT = (
-    "You are an AI assistant having a conversation with a user about a PDF document. "
+    "You are an AI assistant having a conversation with a user about a book. "
     "Answer the user's questions based ONLY on the document context below. "
     "Use the earlier messages in the conversation to understand follow-up questions.\n\n"
     "Rules:\n"
