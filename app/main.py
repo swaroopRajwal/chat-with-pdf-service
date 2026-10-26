@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api import ask_api, chat_api, files_api, ingest_api
+from app.api import ask_api, files_api, ingest_api, reply_api
 from app.database.db import get_db
 from app.database.models.health import HealthTable
 
@@ -27,7 +27,7 @@ app.include_router(docs_dark_theme_router)
 app.include_router(ingest_api.router, prefix="/api/ingest", tags=["Ingest"])
 app.include_router(ask_api.router, prefix="/api/ask", tags=["Ask"])
 app.include_router(files_api.router, prefix="/api/files", tags=["Files"])
-app.include_router(chat_api.router, prefix="/api/chats", tags=["Chat"])
+app.include_router(reply_api.router, prefix="/api/reply", tags=["Reply"])
 
 
 @app.get("/")
