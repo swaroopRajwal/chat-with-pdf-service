@@ -16,6 +16,7 @@ class ChatsTable(Base):
 
     id: Mapped[str] = mapped_column(String, primary_key=True)
     client_id: Mapped[str] = mapped_column(String, nullable=False)
+    title: Mapped[str] = mapped_column(String, nullable=False)
     file_id: Mapped[str] = mapped_column(String, ForeignKey("files.id"))
     file: Mapped[FilesTable] = relationship("FilesTable", back_populates="chats")
     messages: Mapped[list[MessagesTable]] = relationship(

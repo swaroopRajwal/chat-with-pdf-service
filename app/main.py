@@ -6,7 +6,6 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api import ask_api, chat_api, files_api, ingest_api
-from app.api.chat_api import socket_app
 from app.database.db import get_db
 from app.database.models.health import HealthTable
 
@@ -29,7 +28,6 @@ app.include_router(ingest_api.router, prefix="/api/ingest", tags=["Ingest"])
 app.include_router(ask_api.router, prefix="/api/ask", tags=["Ask"])
 app.include_router(files_api.router, prefix="/api/files", tags=["Files"])
 app.include_router(chat_api.router, prefix="/api/chats", tags=["Chat"])
-app.mount("/chat", socket_app)
 
 
 @app.get("/")

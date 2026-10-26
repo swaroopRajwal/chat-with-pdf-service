@@ -17,7 +17,6 @@ dependencies = [
   "pgvector>=0.5.0",
   "pymupdf>=1.28.2",
   "pymupdf4llm>=1.28.2",
-  "python-socketio>=5.16.4",
   "sentence-transformers>=6.0.0",
   "sqlalchemy>=2.0.52",
 ]

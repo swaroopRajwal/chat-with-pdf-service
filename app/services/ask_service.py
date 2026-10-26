@@ -26,7 +26,7 @@ class AskService:
 
         return file
 
-    async def _search_similar_docs(self, file_id: str, query: str, db: AsyncSession):
+    async def search_similar_docs(self, file_id: str, query: str, db: AsyncSession):
         embedding_model = HuggingFaceEmbeddings(model_name=settings.embedding_model)
 
         query_vector = embedding_model.embed_query(query)
@@ -77,7 +77,7 @@ class AskService:
     async def ask_question(self, data: AskRequestSchema, db: AsyncSession):
         file = await self._get_file_by_id(file_id=data.file_id, db=db)
 
-        similar_content = await self._search_similar_docs(
+        similar_content = await self.search_similar_docs(
             file_id=file.id, query=data.query, db=db
         )
 
