@@ -1,4 +1,5 @@
 from typing import TypedDict
+import asyncio
 
 import socketio
 from fastapi import HTTPException, status
@@ -11,7 +12,7 @@ from app.database.db import async_session_maker
 from app.database.models.chats import ChatsTable
 from app.database.models.files import FilesTable
 from app.database.models.message import MessagesTable
-from app.schemas.chat_schema import InitChatReqSchema
+from app.schemas.chat_schema import InitChatReqSchema, MessagesBaseSchema
 from app.utils import get_id
 
 sio = socketio.AsyncServer(
@@ -130,6 +131,43 @@ class ChatService:
         chat.messages.sort(key=lambda m: m.order)
 
         return chat
+
+    async def ask_query(self, data: MessagesBaseSchema, db: AsyncSession):
+        chat = await db.execute(select(ChatsTable).where(ChatsTable.id == data.chat_id))
+
+        chat = chat.scalars().first()
+
+        if not chat:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Chat not found",
+            )
+
+        new_message = MessagesTable(
+            id=get_id(),
+            chat_id=chat.id,
+            content=data.content,
+            role=MESSAGES_ROLES["user"],
+            order=data.order,
+            chat=chat,
+        )
+        db.add(new_message)
+
+        ai_response = MessagesTable(
+            id=get_id(),
+            chat_id=chat.id,
+            content="That's a great question. But I don't know the answer 🤭",
+            role=MESSAGES_ROLES["ai"],
+            order=data.order + 1,
+            chat=chat,
+        )
+        db.add(ai_response)
+
+        await db.commit()
+
+        await asyncio.sleep(5)
+
+        return ai_response
 
 
 chat_service = ChatService()

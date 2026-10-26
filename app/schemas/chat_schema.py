@@ -20,6 +20,11 @@ class MessagesBaseSchema(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class ChatAskRequestSchema(BaseModel):
+    all_messages: list[MessagesBaseSchema]
+    message: MessagesBaseSchema
+
+
 class ChatsBaseSchema(BaseModel):
     id: str = Field(min_length=1)
     client_id: str = Field(min_length=1)

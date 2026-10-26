@@ -1,1 +1,9 @@
-MESSAGES_ROLES = {"user": "USER", "ai": "AI"}
+from typing import TypedDict
+
+
+class MessagesRoles(TypedDict):
+    user: str
+    ai: str
+
+
+MESSAGES_ROLES: MessagesRoles = {"user": "USER", "ai": "AI"}
