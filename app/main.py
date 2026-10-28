@@ -8,12 +8,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api import ask_api, files_api, ingest_api, reply_api
 from app.database.db import get_db
 from app.database.models.health import HealthTable
+from app.settings import settings
 
 app = FastAPI(docs_url=None)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=settings.cors_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -4,14 +4,13 @@ import pymupdf
 import pymupdf4llm
 from fastapi import HTTPException, UploadFile, status
 from langchain_core.documents import Document
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.models import EmbeddingsTable, FilesTable
 from app.settings import settings
-from app.utils import get_id
+from app.utils import get_embedding_model, get_id
 
 
 class PDFResultType(BaseModel):
@@ -85,7 +84,7 @@ class IngestService:
     def _create_embeddings(self, docs: list[Document]):
         texts = [doc.page_content for doc in docs]
 
-        embeddings_model = HuggingFaceEmbeddings(model_name=settings.embedding_model)
+        embeddings_model = get_embedding_model()
 
         vectors = embeddings_model.embed_documents(texts=texts)
 

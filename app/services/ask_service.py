@@ -2,7 +2,6 @@ from typing import cast
 
 import litellm
 from fastapi import HTTPException, status
-from langchain_huggingface import HuggingFaceEmbeddings
 from litellm import ModelResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database.models import EmbeddingsTable, FilesTable
 from app.schemas.ask_schema import AskRequestSchema
 from app.settings import settings
+from app.utils import get_embedding_model
 
 
 class AskService:
@@ -27,7 +27,7 @@ class AskService:
         return file
 
     async def search_similar_docs(self, file_id: str, query: str, db: AsyncSession):
-        embedding_model = HuggingFaceEmbeddings(model_name=settings.embedding_model)
+        embedding_model = get_embedding_model()
 
         query_vector = embedding_model.embed_query(query)
 
